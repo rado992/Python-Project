@@ -19,15 +19,15 @@ class TakenSpace(Exception):
 
 class Board:
 
-    def __init__(self):
+    def __init__(self, game=CLASSIC_GAME):
         self.field = {}
-        self.reset_checkers()
+        self.reset_checkers(game)
 
-    def reset_checkers(self):
+    def reset_checkers(self, game=CLASSIC_GAME):
         self.field = {'B': [], 'W': []}
         for i in range(26):
-            self.field['B'].append(CLASSIC_GAME[i])
-            self.field['W'].append(CLASSIC_GAME[i])
+            self.field['B'].append(game[i])
+            self.field['W'].append(game[i])
         self.takeout = {'B': False, 'W': False}
 
     def check_for_takeout(self, colors):
@@ -62,20 +62,29 @@ class Board:
                 return self.try_to_move(color, position, position + roll)
             else:
                 pass
-                #throw InvalidMove()
+                #raise InvalidMove()
 
         if self.takeout[color]:
             if position >= 19:
-                return self.try_to_move(color, position, min(position + roll, 25))
+                if position + roll == 25:
+                    return self.try_to_move(color, position, 25)
+                elif position + roll > 25:
+                    for i in range(19, position):
+                        if self.field[color][i] > 0:
+                            return False
+                            #raise InvalidMove()
+                    return self.try_to_move(color, position, 25)
+                else:
+                    return self.try_to_move(color, position, position + roll)
             else:
                 pass
-                # throw InvalidMove()
+                #raise InvalidMove()
 
         if 1 <= position <= 23 and position + roll < 24:
             return self.try_to_move(color, position, position + roll)
         else:
             pass
-            # throw InvalidMove()
+            # raise InvalidMove()
 
         return False
 
