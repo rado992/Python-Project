@@ -6,6 +6,10 @@ CLASSIC_GAME = [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5,
                 0, 0, 0, 0, 3, 0, 5, 0, 0, 0, 0, 0, 0]
 
 
+TAKEOUT_GAME = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+                0, 0, 0, 0, 0, 0, 5, 4, 2, 1, 0, 3, 0]
+
+
 class BoardTest(unittest.TestCase):
     def test_new_board(self):
         board = Board()
@@ -34,6 +38,17 @@ class BoardTest(unittest.TestCase):
         #print(board.get_board())
         self.assertEqual(1, board.get_board()['W'][0])
         self.assertEqual(1, board.get_board()['B'][18])
+
+    def test_takeout(self):
+        board = Board(TAKEOUT_GAME)
+        #print(board.get_board())
+        board.move_checker('W', 19, 6)
+        board.move_checker('W', 24, 1)
+        self.assertEqual(False, board.move_checker('W', 24, 5))
+        self.assertEqual(2, board.get_board()['W'][25])
+        self.assertEqual(2, board.get_board()['W'][24])
+        self.assertEqual(4, board.get_board()['W'][19])
+
 
     def test_dice_throw(self):
         board = Board()
