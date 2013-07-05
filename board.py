@@ -103,7 +103,44 @@ class Board:
         return self.field
         #print(self.taken)
         #print(self.knocked)
-a = Board()
+
+    def print_board(self):
+        game = {}
+        for i in range(0, 21):
+            game[i] = {}
+        for i in [0, 20]:
+            for j in range(0, 25):
+                game[i][j] = " " + str(25 - j)
+                if j > 15:
+                    game[i][j] += " "
+        for i in range(1, 20):
+            for j in range(1, 25):
+                if self.field['W'][j] >= i:
+                    game[i][j] = " O "
+                else:
+                    game[i][j] = "   "
+
+        for i in range(1, 20):
+            for j in range(1, 25):
+                if self.field['B'][25 - j] >= i:
+                    game[i][j] = " X "
+        for i in range(0, 8):
+            for j in range(1, 13):
+                print(game[i][13 - j],end="")
+                if j == 6:
+                    print("|",end="")
+            print("")
+        for i in range(13, 21):
+            for j in range(13, 25):
+                print(game[20 - i][j],end="")
+                if j == 18:
+                    print("|",end="")
+            print("")
+        print("HIT:   O: ",self.field['W'][0],", X: ", self.field['B'][0])
+        print("TAKEN: O: ",self.field['W'][25],", X: ", self.field['B'][25])
+
+#a = Board()
+#a.print_board()
 #print(a.get_board())
 #print (a.move_checker('B', 1, 5))
 #for i in range(20):
