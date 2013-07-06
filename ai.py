@@ -125,7 +125,7 @@ def main():
                         try:
                             board = copy.deepcopy(play(board, color, dice))
                         except:
-                            board = copy.deepcopy(play(board, color, [dice[1], dice[0]))
+                            board = copy.deepcopy(play(board, color, [dice[1], dice[0]]))
                         #print("Max: \n", play(board, color, dice).print_board())
                     elif len(dice) == 4:
                         board = copy.deepcopy(play(board, color, [dice[0], dice[1]]))

@@ -1,5 +1,6 @@
 import unittest
 from board import Board
+import copy
 
 
 CLASSIC_GAME = [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5,
@@ -49,14 +50,17 @@ class BoardTest(unittest.TestCase):
         self.assertEqual(2, board.get_board()['W'][24])
         self.assertEqual(4, board.get_board()['W'][19])
 
+    def test_deep_copy(self):
+        board1 = Board()
+        board2 = copy.deepcopy(board1)
+        board1.move_checker('W', 1, 1)
+        self.assertNotEqual(board1.get_board(), board2.get_board())
 
     def test_dice_throw(self):
         board = Board()
         for i in range(50):
             for j in board.throw_dice():
                 self.assertIn(j, range(7))
-
-
 
 
 if __name__ == '__main__':

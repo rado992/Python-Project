@@ -13,6 +13,7 @@ class InvalidMove(Exception):
     def __init__(self, message=""):
         self.message = message
 
+
 class TakenSpace(Exception):
     def __init__(self, message=""):
         self.message = message
@@ -46,7 +47,6 @@ class Board:
                     self.takeout[c] = False
                     break
 
-
     def try_to_move(self, color, old, new):
         if self.field[OTHER[color]][25 - new] > 1:
             return False
@@ -60,17 +60,13 @@ class Board:
             self.field[OTHER[color]][25 - new] -= 1
         return True
 
-
     def move_checker(self, color, position, roll):
-
         self.check_for_takeout(color)
-
         if self.field[color][0] > 0:
             if position == 0:
                 return self.try_to_move(color, position, position + roll)
             else:
                 pass
-                #raise InvalidMove()
 
         if self.takeout[color]:
             if position >= 19:
@@ -86,17 +82,11 @@ class Board:
                     return self.try_to_move(color, position, position + roll)
             else:
                 pass
-                #raise InvalidMove()
-
         if 1 <= position <= 23 and position + roll < 24:
             return self.try_to_move(color, position, position + roll)
         else:
             pass
-            # raise InvalidMove()
-
         return False
-
-
 
     def throw_dice(self):
         a, b = random.randrange(1, 7), random.randrange(1, 7)
@@ -105,12 +95,8 @@ class Board:
         else:
             return [a, b]
 
-
-
     def get_board(self):
         return self.field
-        #print(self.taken)
-        #print(self.knocked)
 
     def takeout(self):
         return self.takeout
@@ -137,24 +123,15 @@ class Board:
                     game[i][j] = " X "
         for i in range(0, 8):
             for j in range(1, 13):
-                print(game[i][13 - j],end="")
+                print(game[i][13 - j], end="")
                 if j == 6:
-                    print("|",end="")
+                    print("|", end="")
             print("")
         for i in range(13, 21):
             for j in range(13, 25):
-                print(game[20 - i][j],end="")
+                print(game[20 - i][j], end="")
                 if j == 18:
-                    print("|",end="")
+                    print("|", end="")
             print("")
-        print("HIT:   O: ",self.field['W'][0],", X: ", self.field['B'][0])
-        print("TAKEN: O: ",self.field['W'][25],", X: ", self.field['B'][25])
-
-#a = Board()
-#a.print_board()
-#print(a.get_board())
-#print (a.move_checker('B', 1, 5))
-#for i in range(20):
-#    print (a.throw_dice())
-#a.print_board()
-
+        print("HIT:   O: ", self.field['W'][0], ", X: ", self.field['B'][0])
+        print("TAKEN: O: ", self.field['W'][25], ", X: ", self.field['B'][25])
