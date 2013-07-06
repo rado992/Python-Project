@@ -70,13 +70,13 @@ def play(board, color, dice):
     new_board = copy.deepcopy(board)
     new_board = copy.deepcopy(make_move(new_board, color, dice[0]))
     new_board = copy.deepcopy(make_move(new_board, color, dice[1]))
-    m1 = 0#value(make_move(make_move(new_board, color, dice[0]), color, dice[1]), color)
     print(new_board.print_board())
+
     new_board = copy.deepcopy(board)
     new_board = copy.deepcopy(make_move(new_board, color, dice[1]))
     new_board = copy.deepcopy(make_move(new_board, color, dice[0]))
-    m2 = 0#value(make_move(make_move(new_board, color, dice[1]), color, dice[0]), color)
     print(new_board.print_board())
+    
     print(m1, m2, value(max_board, color))
     if m2 > m1:
         #new_board.print_board()
@@ -122,7 +122,10 @@ def main():
                 print("DICE: ", dice)
                 try:
                     if len(dice) == 2:
-                        board = copy.deepcopy(play(board, color, dice))
+                        try:
+                            board = copy.deepcopy(play(board, color, dice))
+                        except:
+                            board = copy.deepcopy(play(board, color, [dice[1], dice[0]))
                         #print("Max: \n", play(board, color, dice).print_board())
                     elif len(dice) == 4:
                         board = copy.deepcopy(play(board, color, [dice[0], dice[1]]))
