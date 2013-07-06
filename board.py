@@ -1,5 +1,6 @@
 #from checker import Checker
 import random
+from copy import *
 
 
 CLASSIC_GAME = [0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5,
@@ -22,6 +23,13 @@ class Board:
     def __init__(self, game=CLASSIC_GAME):
         self.field = {}
         self.reset_checkers(game)
+
+    def __deepcopy__(self, memodict):
+        new = type(self)()
+        new.__dict__.update(self.__dict__)
+        new.field = deepcopy(self.field, memodict)
+        new.takeout = deepcopy(self.takeout, memodict)
+        return new
 
     def reset_checkers(self, game=CLASSIC_GAME):
         self.field = {'B': [], 'W': []}
@@ -103,6 +111,9 @@ class Board:
         return self.field
         #print(self.taken)
         #print(self.knocked)
+
+    def takeout(self):
+        return self.takeout
 
     def print_board(self):
         game = {}
