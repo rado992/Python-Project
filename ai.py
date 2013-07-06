@@ -9,10 +9,12 @@ def make_move(board, color, roll):
     field = board.get_board()
     max_eval, move = -100000000, 0
     if field[color][0] > 0:
+        #print("Hit Case")
         if field[OTHER[color]][25 - roll] <= 1:
             board.move_checker(color, 0, roll)
             return board
     elif board.takeout[color]:
+        #print("Takeout Case")
         if field[color][25 - roll] > 0:
             board.move_checker(color, 25-roll, roll)
             return board 
@@ -26,13 +28,15 @@ def make_move(board, color, roll):
                     board.move_checker(color, i, roll)
                     return board   
     else:
+        #print("Default Case")
         new_board = copy.deepcopy(board)
-        for i in range(25, 1, -1):
-            if i - roll > 0 and field[color][i - roll] > 0:
-                new_board.move_checker(color, i - roll, roll)
-                if value(new_board, color) >= max_eval:
-                    max_eval = value(new_board, color)
-                    move = i
+        for i in range(24, 0, -1):
+            if 0 < i - roll < 25 and field[color][i - roll] > 0:
+                if new_board.move_checker(color, i - roll, roll):
+                    #new_board.print_board()
+                    if value(new_board, color) >= max_eval:
+                        max_eval = value(new_board, color)
+                        move = i
                 #print(i)
                 #board.print_board()
                 #print(value(board, color), max_eval)
@@ -54,9 +58,9 @@ def value(board, color):
         if field[OTHER[color]][25 - position] == 1:
             value += 3
         if field[color][position] == 1:
-            value += -4 - 2 * (position / 6)
+            value +=  0.9 - (position / 12)
         if field[color][position] >= 2:
-            value += (7 - field[color][position])
+            value += (4 - field[color][position])
         if field[OTHER[color]][25 - position] == field[color][position] == 0:
             value += 0
     return value
@@ -64,27 +68,72 @@ def value(board, color):
 def play(board, color, dice):
     max_board = Board()
     new_board = copy.deepcopy(board)
-    m1 = value(make_move(make_move(new_board, color, dice[0]), color, dice[1]), color)
+    new_board = copy.deepcopy(make_move(new_board, color, dice[0]))
+    new_board = copy.deepcopy(make_move(new_board, color, dice[1]))
+    m1 = 0#value(make_move(make_move(new_board, color, dice[0]), color, dice[1]), color)
+    print(new_board.print_board())
     new_board = copy.deepcopy(board)
-    m2 = value(make_move(make_move(new_board, color, dice[1]), color, dice[0]), color)
+    new_board = copy.deepcopy(make_move(new_board, color, dice[1]))
+    new_board = copy.deepcopy(make_move(new_board, color, dice[0]))
+    m2 = 0#value(make_move(make_move(new_board, color, dice[1]), color, dice[0]), color)
+    print(new_board.print_board())
     print(m1, m2, value(max_board, color))
     if m2 > m1:
-        new_board.print_board()
+        #new_board.print_board()
         max_board = copy.deepcopy(new_board)
     else:
-        new_board.print_board()
+        #new_board.print_board()
         max_board = copy.deepcopy(new_board)
     return max_board
+
+
+
 def main():
     board = Board()
     dice = board.throw_dice()
     color = 'B'
-    if len(dice) == 2:
-        board = copy.deepcopy(play(board, color, dice))
-    elif len(dice) == 4:
-        board = copy.deepcopy(play(board, color, [dice[0], dice[1]]))
-        board = copy.deepcopy(play(board, color, [dice[2], dice[3]]))
+    line = ""
     board.print_board()
+    try:
+        while True:
+            if color == 'B':
+                dice = board.throw_dice()
+                print("DICE: ", dice)
+                i = 0
+                while (i < len(dice)):
+                    line = input("What to move " + str(dice[i]) + " places? (0 to switch dice)")
+                    if int(line) == 0:
+                        tmp = dice[0]
+                        for i in range(len(dice) - 1):
+                            dice [i] = dice[i + 1]
+                        dice[len(dice) - 1] = tmp
+                        continue
+                    elif line == "exit":
+                        return
+                    pos = int(line)
+                    if board.move_checker(color, pos, dice[i]):
+                        i += 1
+                    else:
+                        print("Cannot move this, try again!")
+                    board.print_board()
+                color = OTHER[color]
+            else:
+                dice = board.throw_dice()
+                print("DICE: ", dice)
+                try:
+                    if len(dice) == 2:
+                        board = copy.deepcopy(play(board, color, dice))
+                        #print("Max: \n", play(board, color, dice).print_board())
+                    elif len(dice) == 4:
+                        board = copy.deepcopy(play(board, color, [dice[0], dice[1]]))
+                        board = copy.deepcopy(play(board, color, [dice[2], dice[3]]))
+                    board.print_board()
+                    color = OTHER[color]
+                except:
+                    color = OTHER[color]
+    except:
+        print("End of game")   
+            
 
 
 def can_form_heap(board, color, position, rolls):
@@ -129,10 +178,10 @@ def point_benefit(board, color, position):
     return benefit
 
 
-print(OTHER['W'])
+#print(OTHER['W'])
 #a = board.Board()
 #a.print_board()
-#make_move(a, 'B', 3)
+#make_move(a, 'B', 6)
 #a.print_board()
 
 if __name__ == "__main__":
